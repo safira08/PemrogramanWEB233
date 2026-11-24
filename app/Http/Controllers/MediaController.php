@@ -24,7 +24,7 @@ class MediaController extends Controller
 {
     /**
      * Menampilkan daftar seluruh media yang tersedia di FlipPlay.
-     * Mendukung fitur pencarian judul / genre melalui query string (contoh: /api/media?search=Inception).
+     * Mendukung fitur pencarian judul / genre melalui query string (contoh: /api/media?title=Attack atau ?search=One).
      * 
      * HTTP Status: 200 OK
      */
@@ -48,7 +48,7 @@ class MediaController extends Controller
             $query->where('title', 'like', '%' . $request->query('title') . '%');
         }
 
-        // Fitur Query Filter berdasarkan jenis media (movie, series, music, podcast)
+        // Fitur Query Filter berdasarkan jenis media (anime, drama, manga, light novel)
         if ($request->filled('type')) {
             $query->where('type', $request->query('type'));
         }
