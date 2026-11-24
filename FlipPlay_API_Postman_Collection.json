@@ -1,0 +1,379 @@
+{
+	"info": {
+		"_postman_id": "flipplay-rest-api-modul4",
+		"name": "FlipPlay REST API - Modul 4",
+		"description": "Koleksi Postman lengkap untuk pengujian REST API FlipPlay Modul 4. Mencakup skenario Berhasil (Happy Path) dan skenario Gagal (Validation/Duplicate Error).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000/api",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Media (CRUD & Filter)",
+			"item": [
+				{
+					"name": "GET List Semua Media (Happy Path)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/media",
+							"host": ["{{base_url}}"],
+							"path": ["media"]
+						},
+						"description": "Menampilkan seluruh daftar media yang tersedia di FlipPlay."
+					}
+				},
+				{
+					"name": "GET Cari Media berdasarkan Judul (Filter Index)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/media?search=Inception",
+							"host": ["{{base_url}}"],
+							"path": ["media"],
+							"query": [
+								{
+									"key": "search",
+									"value": "Inception"
+								}
+							]
+						},
+						"description": "Mencari media berdasarkan kata kunci judul/genre/deskripsi."
+					}
+				},
+				{
+					"name": "GET Detail Satu Media & Pengguna (Relation whenLoaded)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/media/1",
+							"host": ["{{base_url}}"],
+							"path": ["media", "1"]
+						},
+						"description": "Menampilkan detail satu media beserta daftar pengguna yang menyimpannya ke koleksi (users relation)."
+					}
+				},
+				{
+					"name": "POST Tambah Media Baru (Happy Path)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Interstellar\",\n    \"type\": \"movie\",\n    \"genre\": \"Sci-Fi / Adventure\",\n    \"release_year\": 2014,\n    \"duration\": 169,\n    \"description\": \"A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/media",
+							"host": ["{{base_url}}"],
+							"path": ["media"]
+						},
+						"description": "Menambahkan media baru ke dalam sistem FlipPlay."
+					}
+				},
+				{
+					"name": "POST Tambah Media - Gagal (Judul Kosong)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"\",\n    \"type\": \"movie\",\n    \"genre\": \"Action\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/media",
+							"host": ["{{base_url}}"],
+							"path": ["media"]
+						},
+						"description": "Skenario Gagal: Validasi Form Request menolak karena judul kosong (HTTP 422)."
+					}
+				},
+				{
+					"name": "POST Tambah Media - Gagal (Judul Duplikat)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Inception\",\n    \"type\": \"movie\",\n    \"genre\": \"Sci-Fi\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/media",
+							"host": ["{{base_url}}"],
+							"path": ["media"]
+						},
+						"description": "Skenario Gagal: Validasi Form Request menolak karena judul 'Inception' sudah ada di database (HTTP 422)."
+					}
+				},
+				{
+					"name": "PUT Update Data Media (Happy Path)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Inception (Director's Cut)\",\n    \"type\": \"movie\",\n    \"genre\": \"Sci-Fi / Thriller\",\n    \"release_year\": 2010,\n    \"duration\": 155,\n    \"description\": \"Versi pembaruan dengan adegan tambahan.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/media/1",
+							"host": ["{{base_url}}"],
+							"path": ["media", "1"]
+						},
+						"description": "Memperbarui data media berdasarkan ID."
+					}
+				},
+				{
+					"name": "DELETE Hapus Media (Happy Path)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/media/4",
+							"host": ["{{base_url}}"],
+							"path": ["media", "4"]
+						},
+						"description": "Menghapus media dari sistem berdasarkan ID."
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Koleksi Pengguna (Custom Action Relasi)",
+			"item": [
+				{
+					"name": "GET Tampilkan Koleksi Media Pengguna (Happy Path)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/users/1/collections",
+							"host": ["{{base_url}}"],
+							"path": ["users", "1", "collections"]
+						},
+						"description": "Menampilkan seluruh koleksi media yang disimpan oleh pengguna ID 1."
+					}
+				},
+				{
+					"name": "POST Tambah Media ke Koleksi (Happy Path)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"media_id\": 3,\n    \"notes\": \"Disimpan untuk ditonton akhir pekan nanti\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users/1/collections",
+							"host": ["{{base_url}}"],
+							"path": ["users", "1", "collections"]
+						},
+						"description": "Menambahkan media baru ke koleksi pribadi pengguna ID 1."
+					}
+				},
+				{
+					"name": "POST Tambah Media ke Koleksi - Gagal (Duplikat Media)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"media_id\": 1,\n    \"notes\": \"Coba masukkan lagi\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users/1/collections",
+							"host": ["{{base_url}}"],
+							"path": ["users", "1", "collections"]
+						},
+						"description": "Skenario Gagal: Menolak menambahkan media ID 1 karena sudah ada di koleksi pengguna tersebut (HTTP 422)."
+					}
+				},
+				{
+					"name": "DELETE Hapus Media dari Koleksi (Happy Path)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/users/1/collections/2",
+							"host": ["{{base_url}}"],
+							"path": ["users", "1", "collections", "2"]
+						},
+						"description": "Menghapus media ID 2 dari koleksi pengguna ID 1."
+					}
+				},
+				{
+					"name": "DELETE Hapus Media dari Koleksi - Gagal (Media Tidak Ada di Koleksi)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/users/1/collections/99",
+							"host": ["{{base_url}}"],
+							"path": ["users", "1", "collections", "99"]
+						},
+						"description": "Skenario Gagal: Menolak hapus karena media ID 99 tidak ada di koleksi pengguna (HTTP 404)."
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Pengguna (User Management)",
+			"item": [
+				{
+					"name": "GET List Semua Pengguna",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": ["{{base_url}}"],
+							"path": ["users"]
+						}
+					}
+				},
+				{
+					"name": "POST Tambah Pengguna Baru",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Budi Santoso\",\n    \"email\": \"budi@flipplay.test\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": ["{{base_url}}"],
+							"path": ["users"]
+						}
+					}
+				},
+				{
+					"name": "GET Detail Satu Pengguna",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/users/1",
+							"host": ["{{base_url}}"],
+							"path": ["users", "1"]
+						}
+					}
+				}
+			]
+		}
+	]
+}
