@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -11,6 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * Class User
+ * 
+ * Model Eloquent yang merepresentasikan tabel 'users'.
+ * Digunakan untuk mengelola data akun pengguna di FlipPlay.
+ */
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
@@ -19,9 +24,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Casting atribut otomatis.
      */
     protected function casts(): array
     {
@@ -32,12 +35,14 @@ class User extends Authenticatable
     }
 
     /**
-     * Relasi many-to-many ke Media (koleksi media milik pengguna).
+     * Relasi Many-to-Many ke Media.
+     * Satu Pengguna dapat memiliki banyak Media di dalam koleksi pribadinya.
+     * Menggunakan tabel pivot konvensional 'media_user'.
      */
     public function media(): BelongsToMany
     {
-        return $this->belongsToMany(Media::class, 'collections')
-            ->withPivot(['id', 'notes'])
-            ->withTimestamps();
+        return $this->belongsToMany(Media::class, 'media_user')
+            ->withPivot(['id', 'notes']) // Mengambil kolom catatan di pivot
+            ->withTimestamps();          // Mengambil waktu penambahan ke koleksi
     }
 }

@@ -7,14 +7,20 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * Class DatabaseSeeder
+ * 
+ * Seeder untuk mengisi data awal (dummy data) yang realistis ke dalam database FlipPlay.
+ * Dijalankan dengan perintah: `php artisan migrate:fresh --seed`
+ */
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Jalankan proses seeding database.
      */
     public function run(): void
     {
-        // 1. Buat Pengguna FlipPlay
+        // 1. Buat Contoh Akun Pengguna FlipPlay
         $user1 = User::create([
             'name' => 'Ahmad Fauzi',
             'email' => 'ahmad@flipplay.test',
@@ -27,14 +33,14 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password123'),
         ]);
 
-        // 2. Buat Contoh Media FlipPlay
+        // 2. Buat Contoh Katalog Media FlipPlay (Film, Musik, Serial, Podcast)
         $media1 = Media::create([
             'title' => 'Inception',
             'type' => 'movie',
             'genre' => 'Sci-Fi / Action',
             'release_year' => 2010,
             'duration' => 148,
-            'description' => 'A thief who steals corporate secrets through dream-sharing technology.',
+            'description' => 'A thief who steals corporate secrets through the use of dream-sharing technology.',
         ]);
 
         $media2 = Media::create([
@@ -43,7 +49,7 @@ class DatabaseSeeder extends Seeder
             'genre' => 'Classic Rock',
             'release_year' => 1975,
             'duration' => 6,
-            'description' => 'Masterpiece song by legendary British rock band Queen.',
+            'description' => 'Masterpiece lagu rock legendaris dari band Queen.',
         ]);
 
         $media3 = Media::create([
@@ -52,7 +58,7 @@ class DatabaseSeeder extends Seeder
             'genre' => 'Mystery / Sci-Fi',
             'release_year' => 2016,
             'duration' => 50,
-            'description' => 'When a young boy vanishes, a small town uncovers a mystery involving secret experiments.',
+            'description' => 'Misteri hilangnya seorang anak dan kemunculan gadis dengan kekuatan psikis rahasia.',
         ]);
 
         $media4 = Media::create([
@@ -64,11 +70,29 @@ class DatabaseSeeder extends Seeder
             'description' => 'Cerita horor nyata dan investigasi urban legend nusantara.',
         ]);
 
-        // 3. Tambahkan ke koleksi pengguna (pivot)
-        $user1->media()->attach($media1->id, ['notes' => 'Film favorit sepanjang masa', 'created_at' => now(), 'updated_at' => now()]);
-        $user1->media()->attach($media2->id, ['notes' => 'Lagu wajib playlist santai', 'created_at' => now(), 'updated_at' => now()]);
+        // 3. Hubungkan data relasi Many-to-Many ke tabel pivot 'media_user' (Koleksi Pengguna)
+        // User Ahmad Fauzi mengoleksi Inception dan Bohemian Rhapsody
+        $user1->media()->attach($media1->id, [
+            'notes' => 'Film favorit sepanjang masa',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        $user1->media()->attach($media2->id, [
+            'notes' => 'Lagu wajib playlist santai',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-        $user2->media()->attach($media1->id, ['notes' => 'Rekomendasi dari teman', 'created_at' => now(), 'updated_at' => now()]);
-        $user2->media()->attach($media3->id, ['notes' => 'Nonton maraton akhir pekan', 'created_at' => now(), 'updated_at' => now()]);
+        // User Siti Nurhaliza mengoleksi Inception dan Stranger Things
+        $user2->media()->attach($media1->id, [
+            'notes' => 'Rekomendasi dari teman kuliah',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        $user2->media()->attach($media3->id, [
+            'notes' => 'Tontonan maraton akhir pekan',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }

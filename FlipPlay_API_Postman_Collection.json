@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "flipplay-rest-api-modul4",
 		"name": "FlipPlay REST API - Modul 4",
-		"description": "Koleksi Postman lengkap untuk pengujian REST API FlipPlay Modul 4. Mencakup skenario Berhasil (Happy Path) dan skenario Gagal (Validation/Duplicate Error).",
+		"description": "Koleksi Postman lengkap untuk pengujian REST API FlipPlay Modul 4. Mencakup skenario Berhasil (Happy Path) dan skenario Gagal (Validation 422 & Duplicate Conflict 409).",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"variable": [
@@ -17,7 +17,7 @@
 			"name": "1. Media (CRUD & Filter)",
 			"item": [
 				{
-					"name": "GET List Semua Media (Happy Path)",
+					"name": "GET List Semua Media (Happy Path - 200 OK)",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -31,11 +31,11 @@
 							"host": ["{{base_url}}"],
 							"path": ["media"]
 						},
-						"description": "Menampilkan seluruh daftar media yang tersedia di FlipPlay."
+						"description": "Menampilkan seluruh daftar media yang tersedia di FlipPlay (HTTP 200 OK)."
 					}
 				},
 				{
-					"name": "GET Cari Media berdasarkan Judul (Filter Index)",
+					"name": "GET Cari Media berdasarkan Judul (Filter Index - 200 OK)",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -55,11 +55,11 @@
 								}
 							]
 						},
-						"description": "Mencari media berdasarkan kata kunci judul/genre/deskripsi."
+						"description": "Mencari media berdasarkan kata kunci judul/genre/deskripsi melalui query filter endpoint index."
 					}
 				},
 				{
-					"name": "GET Detail Satu Media & Pengguna (Relation whenLoaded)",
+					"name": "GET Detail Satu Media & Pengguna (whenLoaded - 200 OK)",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -73,11 +73,11 @@
 							"host": ["{{base_url}}"],
 							"path": ["media", "1"]
 						},
-						"description": "Menampilkan detail satu media beserta daftar pengguna yang menyimpannya ke koleksi (users relation)."
+						"description": "Menampilkan detail satu media beserta daftar pengguna yang memasukkannya ke koleksi (eager loading relasi users)."
 					}
 				},
 				{
-					"name": "POST Tambah Media Baru (Happy Path)",
+					"name": "POST Tambah Media Baru (Happy Path - 201 Created)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -92,18 +92,18 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Interstellar\",\n    \"type\": \"movie\",\n    \"genre\": \"Sci-Fi / Adventure\",\n    \"release_year\": 2014,\n    \"duration\": 169,\n    \"description\": \"A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.\"\n}"
+							"raw": "{\n    \"title\": \"Interstellar\",\n    \"type\": \"movie\",\n    \"genre\": \"Sci-Fi / Adventure\",\n    \"release_year\": 2014,\n    \"duration\": 169,\n    \"description\": \"Petualangan melintasi lubang cacing untuk mencari planet baru bagi peradaban manusia.\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/media",
 							"host": ["{{base_url}}"],
 							"path": ["media"]
 						},
-						"description": "Menambahkan media baru ke dalam sistem FlipPlay."
+						"description": "Menambahkan media baru ke dalam katalog sistem (HTTP 201 Created)."
 					}
 				},
 				{
-					"name": "POST Tambah Media - Gagal (Judul Kosong)",
+					"name": "POST Tambah Media - Gagal (Judul Kosong - 422 Unprocessable)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -125,11 +125,11 @@
 							"host": ["{{base_url}}"],
 							"path": ["media"]
 						},
-						"description": "Skenario Gagal: Validasi Form Request menolak karena judul kosong (HTTP 422)."
+						"description": "Skenario Gagal: Form Request Validation menolak request jika judul kosong (HTTP 422 Unprocessable Entity)."
 					}
 				},
 				{
-					"name": "POST Tambah Media - Gagal (Judul Duplikat)",
+					"name": "POST Tambah Media - Gagal (Judul Duplikat - 422 Unprocessable)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -151,11 +151,11 @@
 							"host": ["{{base_url}}"],
 							"path": ["media"]
 						},
-						"description": "Skenario Gagal: Validasi Form Request menolak karena judul 'Inception' sudah ada di database (HTTP 422)."
+						"description": "Skenario Gagal: Form Request menolak judul 'Inception' karena sudah terdaftar di database (HTTP 422 Unprocessable Entity)."
 					}
 				},
 				{
-					"name": "PUT Update Data Media (Happy Path)",
+					"name": "PUT Update Data Media (Happy Path - 200 OK)",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -170,18 +170,18 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Inception (Director's Cut)\",\n    \"type\": \"movie\",\n    \"genre\": \"Sci-Fi / Thriller\",\n    \"release_year\": 2010,\n    \"duration\": 155,\n    \"description\": \"Versi pembaruan dengan adegan tambahan.\"\n}"
+							"raw": "{\n    \"title\": \"Inception (Special 4K Edition)\",\n    \"type\": \"movie\",\n    \"genre\": \"Sci-Fi / Thriller\",\n    \"release_year\": 2010,\n    \"duration\": 155,\n    \"description\": \"Versi remaster dengan tambahan adegan behind the scenes.\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/media/1",
 							"host": ["{{base_url}}"],
 							"path": ["media", "1"]
 						},
-						"description": "Memperbarui data media berdasarkan ID."
+						"description": "Memperbarui data media (HTTP 200 OK)."
 					}
 				},
 				{
-					"name": "DELETE Hapus Media (Happy Path)",
+					"name": "DELETE Hapus Media (Happy Path - 200 OK)",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -195,7 +195,7 @@
 							"host": ["{{base_url}}"],
 							"path": ["media", "4"]
 						},
-						"description": "Menghapus media dari sistem berdasarkan ID."
+						"description": "Menghapus media dari katalog berdasarkan ID (HTTP 200 OK)."
 					}
 				}
 			]
@@ -204,7 +204,7 @@
 			"name": "2. Koleksi Pengguna (Custom Action Relasi)",
 			"item": [
 				{
-					"name": "GET Tampilkan Koleksi Media Pengguna (Happy Path)",
+					"name": "GET Tampilkan Koleksi Media Pengguna (200 OK)",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -218,11 +218,11 @@
 							"host": ["{{base_url}}"],
 							"path": ["users", "1", "collections"]
 						},
-						"description": "Menampilkan seluruh koleksi media yang disimpan oleh pengguna ID 1."
+						"description": "Menampilkan seluruh koleksi media milik pengguna ID 1 beserta catatan pivot-nya (HTTP 200 OK)."
 					}
 				},
 				{
-					"name": "POST Tambah Media ke Koleksi (Happy Path)",
+					"name": "POST Tambah Media ke Koleksi (Happy Path - 201 Created)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -237,18 +237,18 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"media_id\": 3,\n    \"notes\": \"Disimpan untuk ditonton akhir pekan nanti\"\n}"
+							"raw": "{\n    \"media_id\": 3,\n    \"notes\": \"Disimpan untuk ditonton akhir pekan\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/users/1/collections",
 							"host": ["{{base_url}}"],
 							"path": ["users", "1", "collections"]
 						},
-						"description": "Menambahkan media baru ke koleksi pribadi pengguna ID 1."
+						"description": "Custom action: menambahkan media ke koleksi pengguna menggunakan attach() (HTTP 201 Created)."
 					}
 				},
 				{
-					"name": "POST Tambah Media ke Koleksi - Gagal (Duplikat Media)",
+					"name": "POST Tambah Media ke Koleksi - Gagal Duplikat (409 Conflict)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -263,18 +263,18 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"media_id\": 1,\n    \"notes\": \"Coba masukkan lagi\"\n}"
+							"raw": "{\n    \"media_id\": 1,\n    \"notes\": \"Coba masukkan lagi yang sudah ada\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/users/1/collections",
 							"host": ["{{base_url}}"],
 							"path": ["users", "1", "collections"]
 						},
-						"description": "Skenario Gagal: Menolak menambahkan media ID 1 karena sudah ada di koleksi pengguna tersebut (HTTP 422)."
+						"description": "Skenario Gagal: Menolak menambahkan media ID 1 yang sudah ada di koleksi pengguna (HTTP 409 Conflict sesuai Modul 4 hal 26)."
 					}
 				},
 				{
-					"name": "DELETE Hapus Media dari Koleksi (Happy Path)",
+					"name": "DELETE Hapus Media dari Koleksi (Happy Path - 200 OK)",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -288,11 +288,11 @@
 							"host": ["{{base_url}}"],
 							"path": ["users", "1", "collections", "2"]
 						},
-						"description": "Menghapus media ID 2 dari koleksi pengguna ID 1."
+						"description": "Custom action: menghapus media ID 2 dari koleksi pengguna ID 1 menggunakan detach() (HTTP 200 OK)."
 					}
 				},
 				{
-					"name": "DELETE Hapus Media dari Koleksi - Gagal (Media Tidak Ada di Koleksi)",
+					"name": "DELETE Hapus Media dari Koleksi - Gagal (404 Not Found)",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -306,7 +306,7 @@
 							"host": ["{{base_url}}"],
 							"path": ["users", "1", "collections", "99"]
 						},
-						"description": "Skenario Gagal: Menolak hapus karena media ID 99 tidak ada di koleksi pengguna (HTTP 404)."
+						"description": "Skenario Gagal: Menolak hapus jika media ID 99 tidak ada di koleksi pengguna (HTTP 404 Not Found)."
 					}
 				}
 			]
@@ -315,7 +315,7 @@
 			"name": "3. Pengguna (User Management)",
 			"item": [
 				{
-					"name": "GET List Semua Pengguna",
+					"name": "GET List Semua Pengguna (200 OK)",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -332,7 +332,7 @@
 					}
 				},
 				{
-					"name": "POST Tambah Pengguna Baru",
+					"name": "POST Tambah Pengguna Baru (201 Created)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -357,7 +357,7 @@
 					}
 				},
 				{
-					"name": "GET Detail Satu Pengguna",
+					"name": "GET Detail Satu Pengguna (200 OK)",
 					"request": {
 						"method": "GET",
 						"header": [
