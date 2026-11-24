@@ -53,13 +53,16 @@ class UserCollectionController extends Controller
 
         // Membungkus proses dengan database transaction untuk menjamin data integrity
         return DB::transaction(function () use ($user, $mediaId, $notes) {
+            $media = Media::findOrFail($mediaId);
+
             // Pengecekan data duplikat (Error Handling Dasar Modul 4 hal 26)
             // Jika media sudah ada di koleksi, tolak dengan status 409 Conflict
             if ($user->media()->where('media_id', $mediaId)->exists()) {
                 return response()->json([
                     'message' => 'Media sudah ada di koleksi',
+                    'media_title' => $media->title,
                     'errors' => [
-                        'media_id' => ['Media ini sudah ada di dalam koleksi Anda.']
+                        'media_id' => ["Media '{$media->title}' sudah ada di dalam koleksi Anda."]
                     ]
                 ], 409);
             }
@@ -70,9 +73,6 @@ class UserCollectionController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-
-            // Ambil model media yang baru ditambahkan untuk ditampilkan di respons
-            $media = Media::findOrFail($mediaId);
 
             // Berikan respons sukses dengan HTTP Status 201 Created
             return response()->json([
