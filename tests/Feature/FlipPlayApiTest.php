@@ -11,6 +11,7 @@ use Tests\TestCase;
  * Class FlipPlayApiTest
  * 
  * Pengujian otomatis (Unit & Feature Test) untuk seluruh endpoint REST API FlipPlay Modul 4.
+ * Menggunakan data studi kasus resmi FlipPlay (Anime, Drama, Manga, Light Novel).
  * Mencakup Skenario Berhasil (Happy Path) dan Skenario Gagal (Failure Path/Validation).
  */
 class FlipPlayApiTest extends TestCase
@@ -45,37 +46,37 @@ class FlipPlayApiTest extends TestCase
     }
 
     /**
-     * [Happy Path] Menguji query filter pencarian media berdasarkan kata kunci judul.
+     * [Happy Path] Menguji query filter pencarian media berdasarkan judul.
      */
     public function test_can_filter_media_by_search_query(): void
     {
-        $response = $this->getJson('/api/media?search=Inception');
+        $response = $this->getJson('/api/media?title=Attack');
 
         $response->assertStatus(200)
-            ->assertJsonFragment(['title' => 'Inception']);
+            ->assertJsonFragment(['title' => 'Attack on Titan']);
     }
 
     /**
-     * [Happy Path] Menguji penambahan media baru dengan data valid menghasilkan status HTTP 201 Created.
+     * [Happy Path] Menguji penambahan media baru dengan data valid (Jujutsu Kaisen, type: anime) menghasilkan status HTTP 201 Created.
      */
     public function test_can_create_new_media_happy_path(): void
     {
         $payload = [
-            'title' => 'Interstellar',
-            'type' => 'movie',
-            'genre' => 'Sci-Fi / Adventure',
-            'release_year' => 2014,
-            'duration' => 169,
-            'description' => 'Petualangan melintasi lubang cacing untuk mencari rumah baru bagi manusia.',
+            'title' => 'Jujutsu Kaisen',
+            'type' => 'anime',
+            'genre' => 'Action / Supernatural',
+            'release_year' => 2020,
+            'duration' => 24,
+            'description' => 'Yuji Itadori bergabung dengan sekolah penyihir Jujutsu untuk memusnahkan kutukan berbahaya.',
         ];
 
         $response = $this->postJson('/api/media', $payload);
 
         $response->assertStatus(201)
-            ->assertJsonFragment(['title' => 'Interstellar']);
+            ->assertJsonFragment(['title' => 'Jujutsu Kaisen']);
 
         // Pastikan data tersimpan secara fisik di database tabel media
-        $this->assertDatabaseHas('media', ['title' => 'Interstellar']);
+        $this->assertDatabaseHas('media', ['title' => 'Jujutsu Kaisen']);
     }
 
     /**
@@ -85,7 +86,7 @@ class FlipPlayApiTest extends TestCase
     {
         $payload = [
             'title' => '',
-            'type' => 'movie',
+            'type' => 'anime',
             'genre' => 'Action',
         ];
 
@@ -101,8 +102,8 @@ class FlipPlayApiTest extends TestCase
     public function test_cannot_create_duplicate_media_title(): void
     {
         $payload = [
-            'title' => 'Inception', // Judul ini sudah ada di DatabaseSeeder
-            'type' => 'movie',
+            'title' => 'Attack on Titan', // Judul ini sudah ada di DatabaseSeeder
+            'type' => 'anime',
             'genre' => 'Action',
         ];
 
@@ -117,12 +118,12 @@ class FlipPlayApiTest extends TestCase
      */
     public function test_can_show_media_detail_with_collected_users(): void
     {
-        $inception = Media::where('title', 'Inception')->firstOrFail();
+        $aot = Media::where('title', 'Attack on Titan')->firstOrFail();
 
-        $response = $this->getJson("/api/media/{$inception->id}");
+        $response = $this->getJson("/api/media/{$aot->id}");
 
         $response->assertStatus(200)
-            ->assertJsonFragment(['title' => 'Inception'])
+            ->assertJsonFragment(['title' => 'Attack on Titan'])
             ->assertJsonStructure([
                 'data' => [
                     'id',
@@ -142,15 +143,15 @@ class FlipPlayApiTest extends TestCase
         $media = Media::first();
 
         $response = $this->putJson("/api/media/{$media->id}", [
-            'title' => 'Inception Updated Version',
-            'type' => 'movie',
-            'genre' => 'Sci-Fi Thriller',
+            'title' => 'Attack on Titan: The Final Season',
+            'type' => 'anime',
+            'genre' => 'Action / Dark Fantasy',
         ]);
 
         $response->assertStatus(200)
-            ->assertJsonFragment(['title' => 'Inception Updated Version']);
+            ->assertJsonFragment(['title' => 'Attack on Titan: The Final Season']);
 
-        $this->assertDatabaseHas('media', ['title' => 'Inception Updated Version']);
+        $this->assertDatabaseHas('media', ['title' => 'Attack on Titan: The Final Season']);
     }
 
     /**
@@ -158,7 +159,7 @@ class FlipPlayApiTest extends TestCase
      */
     public function test_can_delete_media(): void
     {
-        $media = Media::where('title', 'Podcast Lentera Malam')->firstOrFail();
+        $media = Media::where('title', 'Solo Leveling')->firstOrFail();
 
         $response = $this->deleteJson("/api/media/{$media->id}");
 
@@ -172,11 +173,11 @@ class FlipPlayApiTest extends TestCase
     public function test_can_add_media_to_user_collection(): void
     {
         $user = User::where('email', 'ahmad@flipplay.test')->firstOrFail();
-        $media = Media::where('title', 'Podcast Lentera Malam')->firstOrFail();
+        $media = Media::where('title', 'Moving')->firstOrFail();
 
         $response = $this->postJson("/api/users/{$user->id}/collections", [
             'media_id' => $media->id,
-            'notes' => 'Mau didengar pas malam jumat',
+            'notes' => 'Mau nonton pas liburan',
         ]);
 
         $response->assertStatus(201)
@@ -194,11 +195,11 @@ class FlipPlayApiTest extends TestCase
     public function test_cannot_add_same_media_twice_to_user_collection(): void
     {
         $user = User::where('email', 'ahmad@flipplay.test')->firstOrFail();
-        $inception = Media::where('title', 'Inception')->firstOrFail();
+        $aot = Media::where('title', 'Attack on Titan')->firstOrFail();
 
-        // Inception sudah ada di koleksi Ahmad melalui DatabaseSeeder
+        // Attack on Titan sudah ada di koleksi Ahmad melalui DatabaseSeeder
         $response = $this->postJson("/api/users/{$user->id}/collections", [
-            'media_id' => $inception->id,
+            'media_id' => $aot->id,
         ]);
 
         // Berdasarkan Modul 4 hal 26 (Tabel 4.2), status code untuk data duplikat adalah 409 Conflict
@@ -230,16 +231,16 @@ class FlipPlayApiTest extends TestCase
     public function test_can_remove_media_from_user_collection(): void
     {
         $user = User::where('email', 'ahmad@flipplay.test')->firstOrFail();
-        $inception = Media::where('title', 'Inception')->firstOrFail();
+        $onePiece = Media::where('title', 'One Piece')->firstOrFail();
 
-        $response = $this->deleteJson("/api/users/{$user->id}/collections/{$inception->id}");
+        $response = $this->deleteJson("/api/users/{$user->id}/collections/{$onePiece->id}");
 
         $response->assertStatus(200)
-            ->assertJsonFragment(['message' => "Media '{$inception->title}' berhasil dihapus dari koleksi {$user->name}."]);
+            ->assertJsonFragment(['message' => "Media '{$onePiece->title}' berhasil dihapus dari koleksi {$user->name}."]);
 
         $this->assertDatabaseMissing('media_user', [
             'user_id' => $user->id,
-            'media_id' => $inception->id,
+            'media_id' => $onePiece->id,
         ]);
     }
 }

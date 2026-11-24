@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Hash;
 /**
  * Class DatabaseSeeder
  * 
- * Seeder untuk mengisi data awal (dummy data) yang realistis ke dalam database FlipPlay.
+ * Seeder untuk mengisi data awal (dummy data) FlipPlay resmi ke dalam database.
+ * Menggunakan 4 jenis media resmi FlipPlay: anime, drama, manga, dan light novel.
  * Dijalankan dengan perintah: `php artisan migrate:fresh --seed`
  */
 class DatabaseSeeder extends Seeder
@@ -33,64 +34,64 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password123'),
         ]);
 
-        // 2. Buat Contoh Katalog Media FlipPlay (Film, Musik, Serial, Podcast)
+        // 2. Buat Contoh Katalog Media Resmi FlipPlay (Anime, Drama, Manga, Light Novel)
         $media1 = Media::create([
-            'title' => 'Inception',
-            'type' => 'movie',
-            'genre' => 'Sci-Fi / Action',
-            'release_year' => 2010,
-            'duration' => 148,
-            'description' => 'A thief who steals corporate secrets through the use of dream-sharing technology.',
+            'title' => 'Attack on Titan',
+            'type' => 'anime',
+            'genre' => 'Action / Dark Fantasy',
+            'release_year' => 2013,
+            'duration' => 24,
+            'description' => 'Umat manusia berjuang bertahan hidup di balik tembok raksasa dari ancaman Titan pemakan manusia.',
         ]);
 
         $media2 = Media::create([
-            'title' => 'Bohemian Rhapsody',
-            'type' => 'music',
-            'genre' => 'Classic Rock',
-            'release_year' => 1975,
-            'duration' => 6,
-            'description' => 'Masterpiece lagu rock legendaris dari band Queen.',
+            'title' => 'Moving',
+            'type' => 'drama',
+            'genre' => 'Sci-Fi / Action',
+            'release_year' => 2023,
+            'duration' => 50,
+            'description' => 'Kisah anak-anak SMA dengan kekuatan super warisan orang tua mereka yang mantan agen rahasia.',
         ]);
 
         $media3 = Media::create([
-            'title' => 'Stranger Things Season 1',
-            'type' => 'series',
-            'genre' => 'Mystery / Sci-Fi',
-            'release_year' => 2016,
-            'duration' => 50,
-            'description' => 'Misteri hilangnya seorang anak dan kemunculan gadis dengan kekuatan psikis rahasia.',
+            'title' => 'One Piece',
+            'type' => 'manga',
+            'genre' => 'Adventure / Fantasy',
+            'release_year' => 1997,
+            'duration' => 1100,
+            'description' => 'Petualangan Monkey D. Luffy dan bajak laut Topi Jerami mengarungi Grand Line mencari harta karun One Piece.',
         ]);
 
         $media4 = Media::create([
-            'title' => 'Podcast Lentera Malam',
-            'type' => 'podcast',
-            'genre' => 'Horror / Storytelling',
-            'release_year' => 2021,
-            'duration' => 45,
-            'description' => 'Cerita horor nyata dan investigasi urban legend nusantara.',
+            'title' => 'Solo Leveling',
+            'type' => 'light novel',
+            'genre' => 'Action / Fantasy',
+            'release_year' => 2016,
+            'duration' => 270,
+            'description' => 'Perjalanan Sung Jin-Woo dari hunter terlemah menjadi hunter terkuat di dunia melalui sistem quest misterius.',
         ]);
 
         // 3. Hubungkan data relasi Many-to-Many ke tabel pivot 'media_user' (Koleksi Pengguna)
-        // User Ahmad Fauzi mengoleksi Inception dan Bohemian Rhapsody
+        // User 1 (Ahmad Fauzi) mengoleksi Attack on Titan dan One Piece
         $user1->media()->attach($media1->id, [
-            'notes' => 'Film favorit sepanjang masa',
+            'notes' => 'Anime favorit dengan plot twist terbaik',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        $user1->media()->attach($media2->id, [
-            'notes' => 'Lagu wajib playlist santai',
+        $user1->media()->attach($media3->id, [
+            'notes' => 'Manga legendaris wajib dibaca',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        // User Siti Nurhaliza mengoleksi Inception dan Stranger Things
-        $user2->media()->attach($media1->id, [
-            'notes' => 'Rekomendasi dari teman kuliah',
+        // User 2 (Siti Nurhaliza) mengoleksi Moving dan Solo Leveling
+        $user2->media()->attach($media2->id, [
+            'notes' => 'Drama korea action terbaik tahun 2023',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        $user2->media()->attach($media3->id, [
-            'notes' => 'Tontonan maraton akhir pekan',
+        $user2->media()->attach($media4->id, [
+            'notes' => 'Light novel seru pas maraton akhir pekan',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

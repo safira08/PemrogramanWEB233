@@ -41,7 +41,8 @@ class UpdateMediaRequest extends FormRequest
                 'max:255',
                 Rule::unique('media', 'title')->ignore($mediaId),
             ],
-            'type' => ['sometimes', 'required', 'string', 'in:movie,series,music,podcast,game'],
+            // Jenis media resmi FlipPlay: anime, drama, manga, light novel
+            'type' => ['sometimes', 'required', 'string', 'in:anime,drama,manga,light novel'],
             'genre' => ['sometimes', 'required', 'string', 'max:100'],
             'release_year' => ['nullable', 'integer', 'min:1800', 'max:2100'],
             'duration' => ['nullable', 'integer', 'min:1'],
@@ -57,10 +58,10 @@ class UpdateMediaRequest extends FormRequest
         return [
             'title.required' => 'Judul media wajib diisi.',
             'title.unique' => 'Judul media ini sudah terdaftar di sistem FlipPlay.',
-            'type.in' => 'Jenis media harus berupa: movie, series, music, podcast, atau game.',
+            'type.in' => 'Jenis media harus salah satu dari: anime, drama, manga, light novel.',
             'genre.required' => 'Genre media wajib diisi.',
             'release_year.integer' => 'Tahun rilis harus berupa angka tahun.',
-            'duration.integer' => 'Durasi harus berupa angka bulat dalam menit.',
+            'duration.integer' => 'Durasi harus berupa angka bulat.',
         ];
     }
 }

@@ -32,8 +32,8 @@ class StoreMediaRequest extends FormRequest
             // Judul media wajib diisi, berupa string, maksimal 255 karakter, dan tidak boleh duplikat di tabel media
             'title' => ['required', 'string', 'max:255', 'unique:media,title'],
 
-            // Jenis media wajib diisi dan dibatasi jenis yang valid di FlipPlay
-            'type' => ['required', 'string', 'in:movie,series,music,podcast,game'],
+            // Jenis media resmi FlipPlay: anime, drama, manga, light novel
+            'type' => ['required', 'string', 'in:anime,drama,manga,light novel'],
 
             // Genre media wajib diisi, maksimal 100 karakter
             'genre' => ['required', 'string', 'max:100'],
@@ -41,7 +41,7 @@ class StoreMediaRequest extends FormRequest
             // Tahun rilis opsional, jika diisi harus angka tahun antara 1800 - 2100
             'release_year' => ['nullable', 'integer', 'min:1800', 'max:2100'],
 
-            // Durasi opsional dalam satuan menit, minimal 1 menit
+            // Durasi opsional dalam satuan menit/episode/chapter, minimal 1
             'duration' => ['nullable', 'integer', 'min:1'],
 
             // Deskripsi media bersifat opsional berupa teks
@@ -59,10 +59,10 @@ class StoreMediaRequest extends FormRequest
             'title.required' => 'Judul media wajib diisi.',
             'title.unique' => 'Judul media ini sudah terdaftar di FlipPlay, silakan gunakan judul lain.',
             'type.required' => 'Jenis media wajib dipilih.',
-            'type.in' => 'Jenis media harus salah satu dari: movie, series, music, podcast, game.',
+            'type.in' => 'Jenis media harus salah satu dari: anime, drama, manga, light novel.',
             'genre.required' => 'Genre media wajib diisi.',
             'release_year.integer' => 'Tahun rilis harus berupa angka tahun.',
-            'duration.integer' => 'Durasi harus berupa angka bulat dalam menit.',
+            'duration.integer' => 'Durasi harus berupa angka bulat.',
         ];
     }
 }

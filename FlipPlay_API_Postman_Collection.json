@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "flipplay-rest-api-modul4",
 		"name": "FlipPlay REST API - Modul 4",
-		"description": "Koleksi Postman lengkap untuk pengujian REST API FlipPlay Modul 4. Mencakup skenario Berhasil (Happy Path) dan skenario Gagal (Validation 422 & Duplicate Conflict 409).",
+		"description": "Koleksi Postman resmi untuk pengujian REST API FlipPlay Modul 4 (Katalog Anime, Drama, Manga, Light Novel). Mencakup skenario Berhasil (Happy Path) dan skenario Gagal (Validation 422 & Duplicate Conflict 409).",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"variable": [
@@ -45,17 +45,17 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/media?search=Inception",
+							"raw": "{{base_url}}/media?title=Attack",
 							"host": ["{{base_url}}"],
 							"path": ["media"],
 							"query": [
 								{
-									"key": "search",
-									"value": "Inception"
+									"key": "title",
+									"value": "Attack"
 								}
 							]
 						},
-						"description": "Mencari media berdasarkan kata kunci judul/genre/deskripsi melalui query filter endpoint index."
+						"description": "Mencari media berdasarkan kata kunci judul melalui query filter endpoint index (?title=Attack atau ?search=One)."
 					}
 				},
 				{
@@ -73,7 +73,7 @@
 							"host": ["{{base_url}}"],
 							"path": ["media", "1"]
 						},
-						"description": "Menampilkan detail satu media beserta daftar pengguna yang memasukkannya ke koleksi (eager loading relasi users)."
+						"description": "Menampilkan detail media Attack on Titan beserta pengguna yang mengoleksinya (eager loading relasi users)."
 					}
 				},
 				{
@@ -92,14 +92,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Interstellar\",\n    \"type\": \"movie\",\n    \"genre\": \"Sci-Fi / Adventure\",\n    \"release_year\": 2014,\n    \"duration\": 169,\n    \"description\": \"Petualangan melintasi lubang cacing untuk mencari planet baru bagi peradaban manusia.\"\n}"
+							"raw": "{\n    \"title\": \"Jujutsu Kaisen\",\n    \"type\": \"anime\",\n    \"genre\": \"Action / Supernatural\",\n    \"release_year\": 2020,\n    \"duration\": 24,\n    \"description\": \"Yuji Itadori bergabung dengan sekolah penyihir Jujutsu untuk memusnahkan kutukan berbahaya.\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/media",
 							"host": ["{{base_url}}"],
 							"path": ["media"]
 						},
-						"description": "Menambahkan media baru ke dalam katalog sistem (HTTP 201 Created)."
+						"description": "Menambahkan media anime baru ke dalam katalog sistem (HTTP 201 Created)."
 					}
 				},
 				{
@@ -118,14 +118,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"\",\n    \"type\": \"movie\",\n    \"genre\": \"Action\"\n}"
+							"raw": "{\n    \"title\": \"\",\n    \"type\": \"anime\",\n    \"genre\": \"Action\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/media",
 							"host": ["{{base_url}}"],
 							"path": ["media"]
 						},
-						"description": "Skenario Gagal: Form Request Validation menolak request jika judul kosong (HTTP 422 Unprocessable Entity)."
+						"description": "Skenario Gagal: Form Request Validation menolak request jika judul kosong (HTTP 422 Unprocessable Content)."
 					}
 				},
 				{
@@ -144,14 +144,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Inception\",\n    \"type\": \"movie\",\n    \"genre\": \"Sci-Fi\"\n}"
+							"raw": "{\n    \"title\": \"Attack on Titan\",\n    \"type\": \"anime\",\n    \"genre\": \"Action\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/media",
 							"host": ["{{base_url}}"],
 							"path": ["media"]
 						},
-						"description": "Skenario Gagal: Form Request menolak judul 'Inception' karena sudah terdaftar di database (HTTP 422 Unprocessable Entity)."
+						"description": "Skenario Gagal: Form Request menolak judul 'Attack on Titan' karena sudah ada di database (HTTP 422 Unprocessable Content)."
 					}
 				},
 				{
@@ -170,14 +170,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Inception (Special 4K Edition)\",\n    \"type\": \"movie\",\n    \"genre\": \"Sci-Fi / Thriller\",\n    \"release_year\": 2010,\n    \"duration\": 155,\n    \"description\": \"Versi remaster dengan tambahan adegan behind the scenes.\"\n}"
+							"raw": "{\n    \"title\": \"Attack on Titan: The Final Season\",\n    \"type\": \"anime\",\n    \"genre\": \"Action / Dark Fantasy\",\n    \"release_year\": 2020,\n    \"duration\": 24,\n    \"description\": \"Konflik epik antara Paradis dan Marley mencapai puncaknya.\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/media/1",
 							"host": ["{{base_url}}"],
 							"path": ["media", "1"]
 						},
-						"description": "Memperbarui data media (HTTP 200 OK)."
+						"description": "Memperbarui data media berdasarkan ID (HTTP 200 OK)."
 					}
 				},
 				{
@@ -195,7 +195,7 @@
 							"host": ["{{base_url}}"],
 							"path": ["media", "4"]
 						},
-						"description": "Menghapus media dari katalog berdasarkan ID (HTTP 200 OK)."
+						"description": "Menghapus media Solo Leveling (ID 4) dari katalog berdasarkan ID (HTTP 200 OK)."
 					}
 				}
 			]
@@ -218,7 +218,7 @@
 							"host": ["{{base_url}}"],
 							"path": ["users", "1", "collections"]
 						},
-						"description": "Menampilkan seluruh koleksi media milik pengguna ID 1 beserta catatan pivot-nya (HTTP 200 OK)."
+						"description": "Menampilkan seluruh koleksi media milik pengguna ID 1 (Ahmad Fauzi) beserta catatan pivot-nya (HTTP 200 OK)."
 					}
 				},
 				{
@@ -237,14 +237,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"media_id\": 3,\n    \"notes\": \"Disimpan untuk ditonton akhir pekan\"\n}"
+							"raw": "{\n    \"media_id\": 2,\n    \"notes\": \"Tertarik nonton drama Moving karena banyak direkomendasikan\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/users/1/collections",
 							"host": ["{{base_url}}"],
 							"path": ["users", "1", "collections"]
 						},
-						"description": "Custom action: menambahkan media ke koleksi pengguna menggunakan attach() (HTTP 201 Created)."
+						"description": "Custom action: menambahkan media ID 2 (Moving) ke koleksi pengguna ID 1 menggunakan attach() (HTTP 201 Created)."
 					}
 				},
 				{
@@ -263,7 +263,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"media_id\": 1,\n    \"notes\": \"Coba masukkan lagi yang sudah ada\"\n}"
+							"raw": "{\n    \"media_id\": 1,\n    \"notes\": \"Coba masukkan lagi Attack on Titan\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/users/1/collections",
@@ -284,11 +284,11 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/users/1/collections/2",
+							"raw": "{{base_url}}/users/1/collections/3",
 							"host": ["{{base_url}}"],
-							"path": ["users", "1", "collections", "2"]
+							"path": ["users", "1", "collections", "3"]
 						},
-						"description": "Custom action: menghapus media ID 2 dari koleksi pengguna ID 1 menggunakan detach() (HTTP 200 OK)."
+						"description": "Custom action: menghapus media ID 3 (One Piece) dari koleksi pengguna ID 1 menggunakan detach() (HTTP 200 OK)."
 					}
 				},
 				{
